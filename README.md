@@ -1,0 +1,2 @@
+This repository contains code for a visualization and analysis of the Opulence fight in the second raid of the Battle for Azeroth expansion, Battle for Dazar'Alor.
+Check it out at https://ghartman1620.github.io/opulence-jewel-visualization/

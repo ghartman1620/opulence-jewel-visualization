@@ -3,6 +3,8 @@
     <head>
         <script type="text/javascript" src="https://d3js.org/d3.v4.min.js"></script>
         <script src="https://unpkg.com/d3-simple-slider/build/d3-simple-slider.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/d3-legend/2.24.0/d3-legend.js"></script>
+
         <title> Zandalari Crown Jewel DPS </title>
         
 
@@ -34,10 +36,14 @@
         <h1 class="text-center">Opulence in Battle for Dazar'Alor</h1>
         <h2 class="text-center">The Zandalari Crown Jewels</h2>
         <div class="description">
+            <p> <em>Skip to "Conclusions" at the bottom of the page if you're just interested in what DPS jewels to take!</em>
+            </p>
+            
             <p>In World of Warcraft, in the most recent raid, Battle for Dazar'Alor, players must fight a treasure elemental, Opulence. Players begin their assault of Opulence by raiding the Zandalari treasure troves, where each player will be able to select a single Zandalari Crown Jewel to empower themselves. Each grants unique bonuses, but each raider can only select one.</p>
             <p>
             By examining data from many guilds fights against Opulence we can learn about the effects of the different jewels the players might select. Data is gathered from the WarcraftLogs API from a total of 6,586 high-ranking reports of normal difficulty Opulence. The reports whose data are used in this presentation typically have very high percentile DPS parses.
             </p>
+            
             <p>
             First, let us look at the DPS each spec deals in these reports when it selects each jewel.
             </p>
@@ -65,8 +71,8 @@
                 Groups must also decide how many Ruby and how many Topaz, the group DPS jewels, to take. While having more Ruby and Topaz may make the damage debuff stack slightly faster and grant the group more uptime on the Topaz crit buff, fewer Opals present in the raid will reduce the groups's DPS as well.
             </p>
         </div>
-        <h2 class="text-center">Average DPS of Each DPS Player by Quantity of Support Jewel by Group Size</h2>
-        <div class="description"><input type="checkbox" checked id="lineCheckbox"> Show Data from Groups of All Size</div>`
+        <h2 class="text-center">Average Damage Spec DPS by Quantity of Support Jewel by Group Size</h2>
+        <div class="description"><input type="checkbox" checked id="lineCheckbox"> Show Data from Groups of All Size</div>
         <svg id="support-jewel-chart" width=2000 height=600></svg>
         <div class="description">
             <p>
@@ -86,7 +92,62 @@
                 A way this theory could be tested, with a large amount of data, is rather than examining the raw DPS dealt by groups with various selections of gems, examine the average item level parse percentile for the DPS in these groups. However, the WarcraftLogs API does not yield parse percentiles on request. Parse percentiles computed using the small set of data I have available would be misleading.
             </p>
         </div>
+        <h2 class="text-center">Average Damage Spec DPS by Combination of Support Jewel</h2>
+        <div class="description"><input type="checkbox" checked id="plotCheckbox"> Show Data from Groups of All Size</div>
+        <svg id="combination-plot" width=2000 height=600></svg>
+        <div class="description">
+            <p>These two visualizations show that groups should try to minimize their support jewel selection. One of either works very effectively for many groups, and even one of both does not drastically increase dps.</p>
+        </div>
+        <h2 class="text-center"> Conclusions</h2>
+        <div class="description">
+            <p> The data from these reports shows:</p>
+            <ul>
+                <li>The Opal of Unleashed Rage is better than the Emerald of Earthen Roots in overall DPS and in single target damage to Opulence for almost all specs.</li>
+                <li>Groups should minimze their selection of support jewels as increasing more individuals' dps with Opal will grant the group more DPS than additional supporting jewels. About one Ruby and one Topaz is appropriate for groups of most sizes.</li>
+            </ul>
+        </div>
+        
+        <h2 class="text-center"> Further Work </h2>
+        <div class="description">
+            <p> Additional research that could yield further insight and corroborate or deny thes conclusions includes:</p>
+            <ul>
+                <li> Additional data, especially for jewel combinations and specs for which there are limited logs.</li>
+                <li> Using data of lower DPS groups. This data came from reports featured from the WarcraftLogs ranking API endpoint, so groups in it tend to have high DPS. These conclusions may not hold true for lower DPS groups.</li>
+                <li> Rather than comparing raw DPS values per DPS player, compare DPS iLvL parses for selection of jewel. This better accounts for gear discrepancies between groups and would account for the possibility that groups with particular gear levels tend to select certain combinations of jewels and bias the overall DPS of groups with those jewel selections. To do this, either it could be computed using additional reports from WarcraftLogs, or iLvL parses could be scraped by making requests for the report HTML and examining the tables from there rather than from the API. 
+                </li>
+                <li> Data for other difficulties. These conclusions may not be applicable to Heroic or Mythic difficulty.
+                </li>
+            </ul>
+        </div>
+        <h2 class="text-center">Attributions and Sources</h2>
+        <div class="description">
+            <p> Data was gathered from the <a href="https://www.warcraftlogs.com/v1/docs">WarcraftLogs API.</a>
+            </p>
+            <p> Visualizations created using <a href="https://d3js.org/">d3.</a></p>
+            <p> Code sources:</p>
+            <ul>
+                <li>
+                    <a href="https://bl.ocks.org/johnwalley/e1d256b81e51da68f7feb632a53c3518">https://bl.ocks.org/johnwalley/e1d256b81e51da68f7feb632a53c3518</a>
+                </li>
+                <li>
+                    <a href="https://bl.ocks.org/mbostock/4403522">https://bl.ocks.org/mbostock/4403522</a>
+                </li>
+                <li>
+                    <a href="https://bl.ocks.org/mbostock/3887051">https://bl.ocks.org/mbostock/3887051</a>
+                </li>
+                <li>
+                    <a href="https://bl.ocks.org/clhenrick/8aa4c6a9b81ba7032281272255c3fb4d">https://bl.ocks.org/clhenrick/8aa4c6a9b81ba7032281272255c3fb4d</a>
+                </li>
+                <li>
+                    <a href="http://bettermotherfuckingwebsite.com/">http://bettermotherfuckingwebsite.com/</a>
+                </li>
+            </ul>
+            <p style="font-size: 10pt"> This visualization and analysis was created by Gabriel Hartman, aka Elreón-Medivh, Horde U.S. Check out more of my work at <a href="http://github.com/ghartman1620">my Github.</a></p>
+        </div>
+        <br>
+        
         <script type="text/javascript" src="index.js"></script>
         <script type="text/javascript" src="line.js"></script>
+        <script type="text/javascript" src="plot.js"></script>
     </body>
 </html>

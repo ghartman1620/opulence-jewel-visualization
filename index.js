@@ -99,7 +99,8 @@ let targets = [
     "Yalat's Bulwark"
 ];
 
-d3.json("rankingsbytarget_progress2.json", (data) => {
+// prev - "rankingsbytarget_progress2.json"
+d3.json("rankingsbytarget_progress_final.json", (data) => {
     for(let tank of tanks){
         delete data[tank];
     }

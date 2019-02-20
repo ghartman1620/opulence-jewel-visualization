@@ -63,7 +63,6 @@ OPAL_STR = "Opal of Unleashed Rage"
 
 
 def dps_by_jewel_from_fight(fight, report):
-
     save_dir = "cache/"
     filestr = str(report) + "_" + str(fight["id"])
     dmg_file_ext = "_damage.json"
@@ -72,10 +71,10 @@ def dps_by_jewel_from_fight(fight, report):
     try:
         f = open(save_dir + filestr + dmg_file_ext, "r")
         obj = loads(f.read())
-        print("Got report " + str(report) + " damage from file")
+        # print("Got report " + str(report) + " damage from file")
         f.close()
     except IOError:
-        print("Could not get report " + str(report) + " damage from file. Requesting")
+        # print("Could not get report " + str(report) + " damage from file. Requesting")
         resp = get("https://www.warcraftlogs.com:443/v1/report/tables/damage-done/" + report, 
                 params={"api_key" : key, "translate" : True, "start" : fight["start_time"], "end" : fight["end_time"]})
         # resp contains entries, each of which contains a player with their total dps and
@@ -108,10 +107,10 @@ def dps_by_jewel_from_fight(fight, report):
     try:
         f = open(save_dir + filestr + events_file_ext)
         events_obj = loads(f.read())
-        print("Got report " + str(report) + " events from file")
+        # print("Got report " + str(report) + " events from file")
         f.close()
     except IOError:
-        print("Could not get report " + str(report) + " events from file. Requesting")
+        # print("Could not get report " + str(report) + " events from file. Requesting")
         resp = get("https://www.warcraftlogs.com:443/v1/report/events/" + report, 
                 params={"api_key" : key, "translate" : True, "start" : fight["start_time"], "end" : fight["end_time"], 
                 "filter" : 
@@ -189,7 +188,7 @@ def dps_by_jewel_from_fight(fight, report):
     
     group_dps_avg = group_dps_sum/dps_count
 
-    print(dps_count)
+    # print(dps_count)
     # if no group this size yet, set up the structure
     if len(players) not in size_jewel_group_dps:
         size_jewel_group_dps[len(players)] = {RUBY_STR : {}, TOPAZ_STR : {}}
@@ -206,6 +205,24 @@ def dps_by_jewel_from_fight(fight, report):
     size_jewel_group_dps[len(players)][TOPAZ_STR][topaz_count]["avg_dps_sum"] += group_dps_avg
 
 
+    # finally, record this group's dps by their combination of seleceted support jewels.
+    if len(players) not in dps_by_jewel_combination:
+        dps_by_jewel_combination[len(players)] = []
+    jewel_combination_found = False
+    for obj in dps_by_jewel_combination[len(players)]:
+        if obj[RUBY_STR] == ruby_count and obj[TOPAZ_STR] == topaz_count:
+            jewel_combination_found = True
+            obj["count"] += 1
+            obj["avg_dps_sum"] += group_dps_avg
+    if not jewel_combination_found:
+        dps_by_jewel_combination[len(players)].append({
+            "count" : 1,
+            "avg_dps_sum" : group_dps_avg,
+            RUBY_STR: ruby_count,
+            TOPAZ_STR : topaz_count
+        })
+        
+
 def dps_by_jewel_from_report(report):
     save_dir = "cache/"
     filestr = str(report)
@@ -214,10 +231,10 @@ def dps_by_jewel_from_report(report):
     try:
         f = open(save_dir + filestr + fights_file_ext, "r")
         fights_obj = loads(f.read())
-        print("Got report " + str(report) + " fights from file")
+        # print("Got report " + str(report) + " fights from file")
         f.close()
     except IOError:
-        print("Could not get report " + str(report) + " fights from file. Requesting")
+        # print("Could not get report " + str(report) + " fights from file. Requesting")
         # find the opulence fight(s) from our report
         # fights contains a list of all the fights, their start and end time, and
         # what was being fought. see https://www.warcraftlogs.com/v1/docs#!/Report/report_fights_code_get
@@ -282,6 +299,8 @@ dps_rankings = {}
 '''
 size_jewel_group_dps = {}
 
+dps_by_jewel_combination = {}
+
 # finally i'd also like to see combinations of ruby & topaz - how do groups do with exactly
 # 2 ruby, & 1 topaz for example.
 # By group size of course.
@@ -297,7 +316,6 @@ size_jewel_group_dps = {}
 #   {
 #   }
 # ],
-dps_by_jewel_combination = {}
 
 reports = []
 
@@ -309,7 +327,6 @@ with open("reports.txt", "r") as f:
         line = f.readline()
 
 print(str(len(reports)))
-
 
 i = 0
 retry_backoff = .5
@@ -348,24 +365,23 @@ while i < len(reports):
             print("There were repeated errors in analyzing " + str(report) + ". Skipping it.")
             retry_backoff = .5
     # print("report " + str(i))
-    if (i%20 == 0):
-        print("ranking " + str(i/20))
+    if (i%100 == 0):
+        print("ranking " + str(i/100))
         # ATM don't write these reports I've already got them.
-        # with open("rankingsbytarget_progress.json", "w") as f:
-        #     f.write(dumps(dps_rankings))
-        with open("groupsizedps_perdps_progress2.json", "w") as f:
+        with open("rankingsbytarget_progress_final.json", "w") as f:
+            f.write(dumps(dps_rankings))
+        with open("jewelcombinationdps_progress_final.json", "w") as f:
+            f.write(dumps(dps_by_jewel_combination))
+        with open("groupsizedps_progress_final.json", "w") as f:
             f.write(dumps(size_jewel_group_dps))
-
     # instead of this, just allow no maximum to our backoff for rate limit errors.
     # wait for the request to take 1 second so we dont hit the rate limit
     # millis2 = int(round(time() * 1000))
     # if millis2 - millis < 1050:1
     #     sleep(1.05-(millis2-millis)/1000)
     i+=1
-pprint(dps_rankings)
-pprint(size_jewel_group_dps)
 # ATM don't write these reports I've already got them.
 # with open("rankingsbytarget6.json", "w") as f:
 #     f.write(dumps(dps_rankings))
-with open("groupsizedps_perdps2.json", "w") as f:
-    f.write(dumps(size_jewel_group_dps))
+with open("jewelcombinationdps2.json", "w") as f:
+    f.write(dumps(dps_by_jewel_combination))

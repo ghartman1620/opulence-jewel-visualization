@@ -1,7 +1,7 @@
 let svg3 = d3.select("#support-jewel-chart");
 let margin3 = {left: 300, top: 100, right: 500, bottom: 40};
-let width3 = +svg.attr("width") - margin.left - margin.right;
-let height3 = +svg.attr("height") - margin.top - margin.bottom;
+let width3 = +svg.attr("width") - margin3.left - margin3.right;
+let height3 = +svg.attr("height") - margin3.top - margin3.bottom;
 
 // Let's make a line chart! It will show, for a particular group size,
 // The average dps of groups who took particular numbers of jewels.
@@ -56,7 +56,8 @@ const support_jewels = [
     "Topaz of Brilliant Sunlight"
 ]
 
-d3.json("groupsizedps_perdps_progress2.json", (data) => {
+// previously - "groupsizedps_perdps_progress2.json"
+d3.json("groupsizedps_progress_final.json", (data) => {
     // create a function to draw the line chart for a particular
     // group size, using that group size's data.
     let totalCount = 0;
@@ -116,8 +117,6 @@ d3.json("groupsizedps_perdps_progress2.json", (data) => {
             maxCountSize = size;
         }
     }
-    console.log(maxCount);
-    console.log(maxCountSize);
     
     x3.domain([
         0,
@@ -150,13 +149,6 @@ d3.json("groupsizedps_perdps_progress2.json", (data) => {
             })
         })
     ]);
-    console.log(x3.domain());
-
-    
-    console.log(y3.domain());
-    console.log(x3.domain());
-    console.log(totalCount);
-    console.log(data);
     var drawLinesForSize = (size) => {
         g3.html("");
         
