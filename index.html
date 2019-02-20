@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <script type="text/javascript" src="https://d3js.org/d3.v4.min.js"></script>
+        <script src="https://unpkg.com/d3-simple-slider/build/d3-simple-slider.js"></script>
+        <title> Zandalari Crown Jewel DPS </title>
+        
+
+        <style type="text/css">
+            /* CSS borrowed from http://bettermotherfuckingwebsite.com/ */
+            body{
+                background-color: #EEEEEE;
+                margin: 40pxauto;
+                max-width: 2000px;
+                line-height: 1.6;
+                font-size: 18px;
+                color: #444;
+                padding:0 10px;
+            }
+            h1,h2,h3{
+                line-height:1.2;
+            } 
+            .text-center {
+                text-align: center;
+            }
+            .description {
+                text-align: justify;
+                max-width: 50%;
+                margin: auto;
+            }
+        </style>
+    </head>
+    <body>
+        <h1 class="text-center">Opulence in Battle for Dazar'Alor</h1>
+        <h2 class="text-center">The Zandalari Crown Jewels</h2>
+        <div class="description">
+            <p>In World of Warcraft, in the most recent raid, Battle for Dazar'Alor, players must fight a treasure elemental, Opulence. Players begin their assault of Opulence by raiding the Zandalari treasure troves, where each player will be able to select a single Zandalari Crown Jewel to empower themselves. Each grants unique bonuses, but each raider can only select one.</p>
+            <p>
+            By examining data from many guilds fights against Opulence we can learn about the effects of the different jewels the players might select. Data is gathered from the WarcraftLogs API from a total of 6,586 high-ranking reports of normal difficulty Opulence. The reports whose data are used in this presentation typically have very high percentile DPS parses.
+            </p>
+            <p>
+            First, let us look at the DPS each spec deals in these reports when it selects each jewel.
+            </p>
+        </div>
+        <h2 class="text-center">DPS by Jewel Selected for DPS Specs</h2>
+        
+        <svg id="dps" width=2000 height=600></svg>
+        <div class="description">
+            <p>Players who have the "selfish" jewels, Opal and Emerald, naturally deal more dps than DPS with the group buff jewels, Ruby and Topaz. Every player in the group receives the benefits of the players who select the Ruby and Topaz, so overall the players with those jewels do lower DPS than their comrades with Opal and Emerald.</p>
+            <p>As a whole the Opal provides slightly higher DPS than the Emerald. It grants an increasing damage buff on damaging unique targets, so over the course of the Opulence fight as more Spirits of Gold are summoned players with the Opal will tend to deal more damage. I also hypothesize players who select the Opal gem tend to be in AoE spec so they deal large amounts of damage to the Spirits of Gold and increase their overall DPS. To test this hypothesis, let us now examine the damage each spec and jewel combination deals to the treasure guardians, the boss itself, and the Spirits of Gold.</p>
+        </div>
+        <h2 class="text-center">DPS to Opulence Fight Targets by Jewel Selected</h2>
+        <svg id="dps-by-target" width=2000 height=600></svg>
+        <div class="description">
+            <p>
+                The overall data does indicate that players who select the opal do deal more DPS to Opulence itself in addition to the spirits of gold. The increased DPS numbers then are not just from AoE but are also from increased damage to the boss. That would suggest there is no reason to select the Emerald ever over the Opal, which is consistent with <a href="https://www.warcraftlogs.com/zone/rankings/21#boss=2271">what many guilds are doing.</a>
+            </p>
+            <p>
+                An interesting trend to note is that players who select the Emerald deal more damage to the treasure guardian The Hand of In'zashi, but not to Yalat's Bulwark. Yalat's Bulwark requires players to move much more frequently due to its rotating flame cone ability, Flames of Punishment. As a result, players with the emerald will not be able to take advantage of its damage boost for standing still as much as players who are fighting The Hand of In'zashi.
+            </p>
+            <p>
+                The same appears to be the case for players with the Topaz. Topaz jewel holders fighting Yalat's Bulwark in many groups likely must stack near the back of the boss to avoid the flames of punishment and are unable to get the Grossly Incandescent damage boost as much as players fighting The Hand of In'zashi.
+            </p>
+            <p>
+                Groups must also decide how many Ruby and how many Topaz, the group DPS jewels, to take. While having more Ruby and Topaz may make the damage debuff stack slightly faster and grant the group more uptime on the Topaz crit buff, fewer Opals present in the raid will reduce the groups's DPS as well.
+            </p>
+        </div>
+        <h2 class="text-center">Average DPS of Each DPS Player by Quantity of Support Jewel by Group Size</h2>
+        <div class="description"><input type="checkbox" checked id="lineCheckbox"> Show Data from Groups of All Size</div>`
+        <svg id="support-jewel-chart" width=2000 height=600></svg>
+        <div class="description">
+            <p>
+                Interestingly enough, it appears that the support jewels are only worthwhile in small numbers, as for most group sizes they perform well with very few. Even many groups who took 0 jewels performed well.
+            </p>
+            <p>
+                The Ruby only provides a marginal increase of damage for having more, as it can only grant its damage taken debuff once per second, so each player beyond the first who takes the ruby grants less power to the group.
+            </p>
+            <p>
+                While it likewise seems attractive to take more Topaz for additional uptime on its crit buff, it seems as though the loss of dps on that individual often is not worth it. 
+            </p>
+            <p>
+                An interesting trend in this data is that recorded groups who take 0 ruby have a higher average dps than groups who take 1 or 2. However, in the recorded groups a fewer number of groups take 0 ruby than groups who take 1, 2, 3, or 4 ruby.
+                One possible explanation for this trend is that the fewer groups who take 0 ruby possibly outgear normal Opulence. The DPS in such groups would to want to show off higher numbers so they pick Opal or Emerald to improve their own numbers. 
+            </p>
+            <p>
+                A way this theory could be tested, with a large amount of data, is rather than examining the raw DPS dealt by groups with various selections of gems, examine the average item level parse percentile for the DPS in these groups. However, the WarcraftLogs API does not yield parse percentiles on request. Parse percentiles computed using the small set of data I have available would be misleading.
+            </p>
+        </div>
+        <script type="text/javascript" src="index.js"></script>
+        <script type="text/javascript" src="line.js"></script>
+    </body>
+</html>
